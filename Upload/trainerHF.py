@@ -16,7 +16,6 @@ from tqdm import tqdm
 from utils import DiceLoss
 from torchvision import transforms
 from utils import test_single_volume
-
 from Eval_whole import eval_net
 from train_dataset import BasicDataset
 from valid_dataset import BasDataset

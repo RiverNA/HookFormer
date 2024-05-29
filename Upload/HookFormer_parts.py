@@ -253,7 +253,7 @@ class SwinTransformerBlock(nn.Module):
         return flops
 
 
-class CASTs(nn.Module):
+class CAST(nn.Module):
     def __init__(self, dim, input_resolution, num_heads, window_size=7, shift_size=0,
                  mlp_ratio=4., qkv_bias=True, qk_scale=None, drop=0., attn_drop=0., drop_path=0.,
                  act_layer=nn.GELU, norm_layer=nn.LayerNorm):
@@ -497,7 +497,7 @@ class BasicLayer(nn.Module):
         return flops
 
 
-class CAST(nn.Module):
+class CASTs(nn.Module):
     def __init__(self, dim, input_resolution, depth, num_heads, window_size,
                  mlp_ratio=4., qkv_bias=True, qk_scale=None, drop=0., attn_drop=0.,
                  drop_path=0., norm_layer=nn.LayerNorm, downsample=None, use_checkpoint=False):
@@ -508,14 +508,14 @@ class CAST(nn.Module):
         self.depth = depth
         self.use_checkpoint = use_checkpoint
         self.blocks = nn.ModuleList([
-            CASTs(dim=dim, input_resolution=input_resolution,
-                  num_heads=num_heads, window_size=window_size,
-                  shift_size=0 if (i % 2 == 0) else window_size // 2,
-                  mlp_ratio=mlp_ratio,
-                  qkv_bias=qkv_bias, qk_scale=qk_scale,
-                  drop=drop, attn_drop=attn_drop,
-                  drop_path=drop_path[i] if isinstance(drop_path, list) else drop_path,
-                  norm_layer=norm_layer)
+            CAST(dim=dim, input_resolution=input_resolution,
+                 num_heads=num_heads, window_size=window_size,
+                 shift_size=0 if (i % 2 == 0) else window_size // 2,
+                 mlp_ratio=mlp_ratio,
+                 qkv_bias=qkv_bias, qk_scale=qk_scale,
+                 drop=drop, attn_drop=attn_drop,
+                 drop_path=drop_path[i] if isinstance(drop_path, list) else drop_path,
+                 norm_layer=norm_layer)
             for i in range(depth)])
         if downsample is not None:
             self.downsample = downsample(input_resolution, dim=dim, norm_layer=norm_layer)
@@ -624,18 +624,18 @@ class Cross_Interaction(nn.Module):
         self.num_features = num_features
         self.adjust = nn.Linear(self.num_features, self.num_features // 2)
         dpr = [x.item() for x in torch.linspace(0, 0.05, sum(CAST_depths))]
-        self.CAST = CAST(dim=int(self.num_features // 2),
-                         input_resolution=(t_window_size, t_window_size),
-                         depth=CAST_depths[2],
-                         num_heads=num_heads[2],
-                         window_size=c_window_size,
-                         mlp_ratio=mlp_ratio,
-                         qkv_bias=qkv_bias, qk_scale=qk_scale,
-                         drop=drop_rate, attn_drop=attn_drop_rate,
-                         drop_path=dpr[sum(CAST_depths[:2]):sum(CAST_depths[:2 + 1])],
-                         norm_layer=norm_layer,
-                         downsample=None,
-                         use_checkpoint=use_checkpoint)
+        self.CASTs = CASTs(dim=int(self.num_features // 2),
+                           input_resolution=(t_window_size, t_window_size),
+                           depth=CAST_depths[2],
+                           num_heads=num_heads[2],
+                           window_size=c_window_size,
+                           mlp_ratio=mlp_ratio,
+                           qkv_bias=qkv_bias, qk_scale=qk_scale,
+                           drop=drop_rate, attn_drop=attn_drop_rate,
+                           drop_path=dpr[sum(CAST_depths[:2]):sum(CAST_depths[:2 + 1])],
+                           norm_layer=norm_layer,
+                           downsample=None,
+                           use_checkpoint=use_checkpoint)
 
     def forward(self, tf, hook):
         B, hw, C = hook[1].shape
@@ -643,8 +643,8 @@ class Cross_Interaction(nn.Module):
                                                                                                                      -1,
                                                                                                                      self.num_features // 2)
         tf = self.adjust(tf)
-        ctcf = torch.cat([self.CAST(cf, tf), cf], dim=-1)
-        tctf = torch.cat([self.CAST(tf, cf), tf], dim=-1)
+        ctcf = torch.cat([self.CASTs(cf, tf), cf], dim=-1)
+        tctf = torch.cat([self.CASTs(tf, cf), tf], dim=-1)
 
         return torch.cat([tctf, ctcf], dim=-1)
 

@@ -118,4 +118,3 @@ class BasDataset(Dataset):
             'mask_context': mask_context,
             'suffix': suffix,
         }
-

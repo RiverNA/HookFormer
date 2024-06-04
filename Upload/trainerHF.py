@@ -16,7 +16,7 @@ from tqdm import tqdm
 from utils import DiceLoss
 from torchvision import transforms
 from utils import test_single_volume
-from Eval_whole import eval_net
+from eval_complete import eval_net
 from train_dataset import BasicDataset
 from valid_dataset import BasDataset
 
@@ -35,14 +35,19 @@ valid_mask_context = os.path.join(scratch_valid, 'context_masks')
 
 
 def trainer_HookFormer(args, model, snapshot_path):
-    logging.basicConfig(filename=snapshot_path + "/log.txt", level=logging.INFO, format='[%(asctime)s.%(msecs)03d] %(message)s', datefmt='%H:%M:%S')
+    logging.basicConfig(filename=snapshot_path + "/log.txt", level=logging.INFO,
+                        format='[%(asctime)s.%(msecs)03d] %(message)s', datefmt='%H:%M:%S')
     logging.getLogger().addHandler(logging.StreamHandler(sys.stdout))
     logging.info(str(args))
-    train_dataset = BasicDataset(dir_img_target=dir_img_target, dir_mask_target=dir_mask_target, dir_img_context=dir_img_context, dir_mask_context=dir_mask_context)
-    train_loader = DataLoader(train_dataset, batch_size=args.batch_size, shuffle=True, num_workers=16, pin_memory=True, drop_last=False)
+    train_dataset = BasicDataset(dir_img_target=dir_img_target, dir_mask_target=dir_mask_target,
+                                 dir_img_context=dir_img_context, dir_mask_context=dir_mask_context)
+    train_loader = DataLoader(train_dataset, batch_size=args.batch_size, shuffle=True, num_workers=16, pin_memory=True,
+                              drop_last=False)
     n_dataset = len(train_dataset)
-    valid_dataset = BasDataset(dir_img_target=valid_img_target, dir_mask_target=valid_mask_target, dir_img_context=valid_img_context, dir_mask_context=valid_mask_context)
-    valid_loader = DataLoader(valid_dataset, batch_size=1, shuffle=False, num_workers=16, pin_memory=True, drop_last=False)
+    valid_dataset = BasDataset(dir_img_target=valid_img_target, dir_mask_target=valid_mask_target,
+                               dir_img_context=valid_img_context, dir_mask_context=valid_mask_context)
+    valid_loader = DataLoader(valid_dataset, batch_size=1, shuffle=False, num_workers=16, pin_memory=True,
+                              drop_last=False)
     model.train()
     ce_loss = CrossEntropyLoss()
     dice_loss = DiceLoss(args.num_classes)
@@ -68,7 +73,9 @@ def trainer_HookFormer(args, model, snapshot_path):
         epoch_loss = 0
         print('\n' + 'lr:', optimizer.param_groups[0]['lr'])
         for i_batch, sampled_batch in enumerate(train_loader):
-            image_target, label_target, image_context, label_context = sampled_batch['image_target'].cuda(), sampled_batch['mask_target'].cuda(), sampled_batch['image_context'].cuda(), sampled_batch['mask_context'].cuda()
+            image_target, label_target, image_context, label_context = sampled_batch['image_target'].cuda(), \
+            sampled_batch['mask_target'].cuda(), sampled_batch['image_context'].cuda(), sampled_batch[
+                'mask_context'].cuda()
             masks = [label_target]
             for i in range(4):
                 big_mask = masks[-1]

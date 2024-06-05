@@ -54,7 +54,6 @@ If you find this work useful for your research, please consider citing our work:
   NUMBER = {9},
   PAGES = {4287--4313},
   URL = {https://essd.copernicus.org/articles/14/4287/2022/},
-  DOI = {10.5194/essd-14-4287-2022}
-}
+  DOI = {10.5194/essd-14-4287-2022}}
 ```
 

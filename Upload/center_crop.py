@@ -27,13 +27,13 @@ if not os.path.exists(images):
 if not os.path.exists(masks):
     os.makedirs(masks)
 if not os.path.exists(imagesv):
-    os.makedirs(images)
+    os.makedirs(imagesv)
 if not os.path.exists(masksv):
-    os.makedirs(masks)
+    os.makedirs(masksv)
 if not os.path.exists(imagest):
-    os.makedirs(images)
+    os.makedirs(imagest)
 if not os.path.exists(maskst):
-    os.makedirs(masks)
+    os.makedirs(maskst)
     
 ims = sorted(glob.glob(os.path.join(im, '*.png')))
 mas = sorted(glob.glob(os.path.join(ma, '*.png')))

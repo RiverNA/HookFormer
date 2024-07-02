@@ -6,8 +6,8 @@ MODEL:
     EMBED_DIM: 96
     C_DEPTHS: [ 2, 2, 6, 2 ]
     T_DEPTHS: [ 2, 2, 6 ]
-    DECODER_DEPTHS: [ 2, 2, 2, 1]
-    CAST_DEPTHS: [2, 2, 8, 2]
+    DECODER_DEPTHS: [ 2, 2, 2, 1 ]
+    CAST_DEPTHS: [ 2, 2, 8, 2 ]
     NUM_HEADS: [ 3, 6, 12, 24 ]
     C_WINDOW_SIZE: 7
     T_WINDOW_SIZE: 14

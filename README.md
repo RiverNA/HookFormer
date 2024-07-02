@@ -22,7 +22,7 @@ Please refer to [CaFFe](https://github.com/Nora-Go/Calving_Fronts_and_Where_to_F
 Licensed under an MIT license.
 
 ### Citation
-If you find the codes of our work useful for your research, please cite us:
+If you find our work useful for your research, please cite us:
 ```
 @ARTICLE{10440599,
   author={Wu, Fei and Gourmelon, Nora and Seehaus, Thorsten and Zhang, Jianlin and Braun, Matthias and Maier, Andreas and Christlein, Vincent},

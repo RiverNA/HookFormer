@@ -124,7 +124,9 @@ class WindowAttention_Cross(nn.Module):
         relative_coords[:, :, 0] *= 2 * self.window_size[1] - 1
         relative_position_index = relative_coords.sum(-1)
         self.register_buffer("relative_position_index", relative_position_index)
-        self.qkv = nn.Linear(dim, dim * 3, bias=qkv_bias)
+        self.q = nn.Linear(dim, dim, bias=qkv_bias)
+        self.k = nn.Linear(dim, dim, bias=qkv_bias)
+        self.v = nn.Linear(dim, dim, bias=qkv_bias)
         self.attn_drop = nn.Dropout(attn_drop)
         self.proj = nn.Linear(dim, dim)
         self.proj_drop = nn.Dropout(proj_drop)
@@ -134,9 +136,9 @@ class WindowAttention_Cross(nn.Module):
 
     def forward(self, x, y, mask=None):
         B_, N, C = x.shape
-        q = x.reshape(B_, N, self.num_heads, C // self.num_heads).permute(0, 2, 1, 3).contiguous()
-        k = y.reshape(B_, N, self.num_heads, C // self.num_heads).permute(0, 2, 1, 3).contiguous()
-        v = y.reshape(B_, N, self.num_heads, C // self.num_heads).permute(0, 2, 1, 3).contiguous()
+        q = self.q(x).reshape(B_, N, self.num_heads, C // self.num_heads).permute(0, 2, 1, 3).contiguous()
+        k = self.k(y).reshape(B_, N, self.num_heads, C // self.num_heads).permute(0, 2, 1, 3).contiguous()
+        v = self.v(y).reshape(B_, N, self.num_heads, C // self.num_heads).permute(0, 2, 1, 3).contiguous()
         q = q * self.scale
         attn = (q @ k.transpose(-2, -1).contiguous())
         relative_position_bias = self.relative_position_bias_table[self.relative_position_index.view(-1)].view(
@@ -887,6 +889,7 @@ class Model(nn.Module):
         c, c_downsample = self.c_encoder(c)
         c, hook = self.c_decoder(c, c_downsample)
         c = self.c_to_final(c)
+        
         # Target branch
         t, t_downsample = self.t_encoder(t)
         B, L, C = t.shape

@@ -40,7 +40,12 @@ class BasDataset(Dataset):
         return target, context, mask_target, mask_context
 
     def Rotate(self, target_image, context_image, target_mask, context_mask):
-        angle = np.random.randint(0, 360)
+        random = np.random.randint(0, 3)
+        angle = 90
+        if random == 1:
+            angle = 180
+        elif random == 2:
+            angle = 270
         target = torchvision.transforms.functional.rotate(target_image, angle=angle)
         context = torchvision.transforms.functional.rotate(context_image, angle=angle)
         mask_target = torchvision.transforms.functional.rotate(target_mask.unsqueeze(0), angle=angle)

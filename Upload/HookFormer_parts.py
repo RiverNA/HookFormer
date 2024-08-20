@@ -411,7 +411,7 @@ class T_PatchExpand(nn.Module):
         self.input_resolution = input_resolution
         self.dim = dim
         self.expand = nn.Linear(dim, dim, bias=False) if dim_scale == 2 else nn.Identity()
-        self.norm = norm_layer(t_dim // 2)
+        self.norm = norm_layer(t_dim // dim_scale)
 
     def forward(self, x):
         H, W = self.input_resolution

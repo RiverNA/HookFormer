@@ -23,7 +23,7 @@ Licensed under an MIT license.
 
 ### Citation
 If you find this work useful for your research, please cite us:
-```
+```bibtex
 @ARTICLE{10440599,
   author={Wu, Fei and Gourmelon, Nora and Seehaus, Thorsten and Zhang, Jianlin and Braun, Matthias and Maier, Andreas and Christlein, Vincent},
   journal={IEEE Transactions on Geoscience and Remote Sensing}, 

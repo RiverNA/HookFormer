@@ -25,15 +25,15 @@ def whole_preprocess(pil_img):
     img_trans = img_nd[:, :, 0]
     H, W = img_trans.shape
     mask = np.ones([H, W]) * 15
-    stone = np.where(img_trans == 0)
-    na_area = np.where(img_trans == 63)
-    na_areas = np.where(img_trans == 64)
-    glacier = np.where(img_trans == 127)
+    na_area = np.where(img_trans == 0)
+    glacier = np.where(img_trans == 63)
+    glaciers = np.where(img_trans == 64)
+    stone = np.where(img_trans == 127)
     ocean_ice = np.where(img_trans == 254)
-    mask[stone] = 0
-    mask[na_area] = 1
-    mask[na_areas] = 1
-    mask[glacier] = 2
+    mask[na_area] = 0
+    mask[glacier] = 1
+    mask[glaciers] = 1
+    mask[stone] = 2
     mask[ocean_ice] = 3
 
     return mask
@@ -43,12 +43,12 @@ def mask_to_image(pre_mask, save_path, suffix):
     c, h, w = pre_mask.shape
     out = np.zeros((3, h, w), dtype=np.uint8)
     na_area = np.where(pre_mask.to('cpu') == 0)
-    stone = np.where(pre_mask.to('cpu') == 1)
-    glacier = np.where(pre_mask.to('cpu') == 2)
+    glacier = np.where(pre_mask.to('cpu') == 1)
+    stone = np.where(pre_mask.to('cpu') == 2)
     ocean_ice = np.where(pre_mask.to('cpu') == 3)
     out[na_area] = 0
-    out[stone] = 63
-    out[glacier] = 127
+    out[glacier] = 63
+    out[stone] = 127
     out[ocean_ice] = 254
     out[1] = out[0]
     out[2] = out[0]

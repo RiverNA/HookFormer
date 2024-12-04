@@ -47,7 +47,7 @@ def mask_to_image(pre_mask, save_path, suffix):
     glacier = np.where(pre_mask.to('cpu') == 2)
     ocean_ice = np.where(pre_mask.to('cpu') == 3)
     out[na_area] = 0
-    out[stone] = 63
+    out[stone] = 64
     out[glacier] = 127
     out[ocean_ice] = 254
     out[1] = out[0]

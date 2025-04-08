@@ -3,7 +3,7 @@ This repository includes the codes for the paper:
  
 [**Contextual HookFormer for Glacier Calving Front Segmentation**](https://ieeexplore.ieee.org/document/10440599), accepted by *IEEE TGRS*
 
-Fei Wu, Nora Gourmelon, Thorsten Seehaus, Jianlin Zhang, Matthias Braun, Andreas Maier, and Vincent Christlein
+Fei Wu · Nora Gourmelon · Thorsten Seehaus · Jianlin Zhang · Matthias Braun · Andreas Maier · Vincent Christlein
 
 ![](fig.png)
 

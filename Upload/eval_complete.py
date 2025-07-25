@@ -15,8 +15,6 @@ from PIL import Image
 from torchvision import transforms
 from torchvision.utils import save_image
 
-test_save = './patch_results'
-
 
 def whole_preprocess(pil_img):
     img_nd = np.array(pil_img)
@@ -61,6 +59,7 @@ def eval_net(model, loader, device):
     mask_type = torch.float32 if model.num_classes <= 2 else torch.int64
     n_val = len(loader)
     iou_ratio = 0
+    test_save = os.path.join(os.environ['TMPDIR'], 'patch_save')
     if not os.path.exists(test_save):
         os.makedirs(test_save)
     with tqdm(total=n_val, desc='Round', unit='img') as pbar:
@@ -91,8 +90,9 @@ def eval_net(model, loader, device):
                 iou_ratio += iou
             pbar.update()
 
-    groundtruth = './Valid/Validation/ground_truth'
-    whole_save = './whole_results'
+    groundtruth = os.path.join(os.environ['TMPDIR'], 'ori')
+    whole_save = os.path.join(os.environ['TMPDIR'], 'whole_save')
+    
     masks_ground = sorted(glob.glob(os.path.join(groundtruth, '*.png')))
     totensor = transforms.Compose([
         transforms.ToTensor(),

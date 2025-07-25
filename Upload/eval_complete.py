@@ -104,7 +104,7 @@ def eval_net(model, loader, device):
     for i in range(len(masks_ground)):
         ground = masks_ground[i]
         suffix = ground.split('/')[-1].split('.')[0][0:-6]
-        img = Image.open(ground)
+        img = Image.open(ground).convert("RGB")
         W, H = img.size
         HH = H // 224 + 1
         WW = W // 224 + 1
@@ -112,7 +112,7 @@ def eval_net(model, loader, device):
         test = sorted(glob.glob(os.path.join(test_save, suffix + '*.png')))
         all = []
         for j in range(len(test)):
-            ti = Image.open(test[j])
+            ti = Image.open(test[j]).convert("RGB")
             all.append(ti)
         whole = Image.new('RGB', (WW * length, HH * length))
         for k in range(len(all)):

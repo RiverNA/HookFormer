@@ -1,3 +1,7 @@
+:trophy: **We won the First Place in the ICDAR 2024 SAM Competition**
+
+:trophy: **We won the Third Place in the ICDAR 2025 FEST Competition**
+
 # HookFormer
 This repository includes the codes for the paper:
  

@@ -1,7 +1,3 @@
-:trophy: **We won the First Place in the ICDAR 2024 SAM Competition**
-
-:trophy: **We won the Third Place in the ICDAR 2025 FEST Competition**
-
 # HookFormer
 This repository includes the codes for the paper:
  
@@ -24,6 +20,11 @@ Please refer to [CaFFe](https://github.com/Nora-Go/Calving_Fronts_and_Where_to_F
 
 ### License
 Licensed under an MIT license.
+
+### News
+:trophy: We won the First Place in the ICDAR 2024 SAM Competition.
+
+:trophy: We won the Third Place in the ICDAR 2025 FEST Competition.
 
 ### Citation
 If you find this work useful for your research, please cite us:

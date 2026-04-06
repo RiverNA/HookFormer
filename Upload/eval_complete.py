@@ -106,10 +106,10 @@ def eval_net(model, loader, device):
         suffix = ground.split('/')[-1].split('.')[0][0:-6]
         img = Image.open(ground).convert("RGB")
         W, H = img.size
-        HH = H // 224 + 1
-        WW = W // 224 + 1
-        length = 224
         test = sorted(glob.glob(os.path.join(test_save, suffix + '*.png')))
+        length = Image.open(test[0]).convert("RGB").size[0]
+        HH = H // length + 1
+        WW = W // length + 1
         all = []
         for j in range(len(test)):
             ti = Image.open(test[j]).convert("RGB")

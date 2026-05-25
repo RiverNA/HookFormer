@@ -74,8 +74,8 @@ def eval_net(model, loader, device):
             with torch.no_grad():
                 masks_pred = model(imgs_target, imgs_context)
 
-            if model.num_classes > 2:
-                IOU = torchmetrics.IoU(num_classes=4, absent_score=1)
+            if model.num_classes >= 2:
+                IOU = torchmetrics.IoU(num_classes=model.num_classes, absent_score=1)
                 prd_target = F.log_softmax(masks_pred[0], dim=1)
                 prd_target = torch.argmax(prd_target, dim=1)
                 mask_to_image(prd_target, test_save, suffix)
@@ -83,7 +83,7 @@ def eval_net(model, loader, device):
                 iou_ratio += iou
 
             else:
-                IOU = torchmetrics.IoU(num_classes=2, absent_score=1)
+                IOU = torchmetrics.IoU(num_classes=model.num_classes + 1, absent_score=1)
                 pred = torch.sigmoid(masks_pred[0])
                 pred = (pred > 0.5).float()
                 iou = IOU(pred.cpu().detach(), true_masks_target.type(torch.int64).cpu().detach())
@@ -99,7 +99,7 @@ def eval_net(model, loader, device):
     ])
     if not os.path.exists(whole_save):
         os.makedirs(whole_save)
-    IOU = torchmetrics.IoU(num_classes=4, absent_score=1, reduction='none')
+    IOU = torchmetrics.IoU(num_classes=model.num_classes, absent_score=1, reduction='none')
     iou_ratio = 0
     for i in range(len(masks_ground)):
         ground = masks_ground[i]

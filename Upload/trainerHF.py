@@ -61,12 +61,13 @@ def trainer_HookFormer(args, model, snapshot_path):
         checkpoints = torch.load(load_path, map_location=device)
         model.load_state_dict(checkpoints['model_state_dict'])
         optimizer.load_state_dict(checkpoints['optimizer_state_dict'])
-        eepoch = checkpoints['epoch']
-        iter_num = checkpoints['ite_num']
-        iterator = tqdm(range(max_epoch - eepoch), ncols=70)
+        epoch = checkpoints['epoch']
+        iter_num = checkpoints['iter_num']
+        iterator = tqdm(range(max_epoch - epoch), ncols=70)
         print(f'Model loaded from {load_path}')
     else:
         iterator = tqdm(range(max_epoch), ncols=70)
+        epoch = 0
         iter_num = 0
 
     for epoch_num in iterator:
@@ -104,12 +105,12 @@ def trainer_HookFormer(args, model, snapshot_path):
         print('Valid iou ratio: {}, {}'.format(valid_iou_ratio, iou))
 
         if load_path:
-            save_mode_path = os.path.join(snapshot_path, 'HookFormer_epoch{:03d}.pth'.format(epoch_num + eepoch + 1))
+            save_mode_path = os.path.join(snapshot_path, 'HookFormer_epoch{:03d}.pth'.format(epoch_num + epoch + 1))
             print("save model to {}".format(save_mode_path))
             torch.save({'model_state_dict': model.state_dict(),
                         'optimizer_state_dict': optimizer.state_dict(),
-                        'epoch': epoch_num + eepoch + 1,
-                        'ite_num': iter_num,
+                        'epoch': epoch_num + epoch + 1,
+                        'iter_num': iter_num,
                         }, save_mode_path)
         else:
             save_mode_path = os.path.join(snapshot_path, 'HookFormer_epoch{:03d}.pth'.format(epoch_num + 1))
@@ -117,7 +118,7 @@ def trainer_HookFormer(args, model, snapshot_path):
             torch.save({'model_state_dict': model.state_dict(),
                         'optimizer_state_dict': optimizer.state_dict(),
                         'epoch': epoch_num + 1,
-                        'ite_num': iter_num,
+                        'iter_num': iter_num,
                         }, save_mode_path)
 
     return "Training Finished!"
